@@ -2308,6 +2308,8 @@ namespace OpenNos.GameObject.Networking
         private void LaunchEvents()
         {
             _groups = new ConcurrentDictionary<long, Group>();
+            
+            Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(x => { SaveAll(); });
 
             Observable.Interval(TimeSpan.FromSeconds(5)).Subscribe(x => { Act6Process(); });
 
