@@ -158,6 +158,35 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $ItemRain Command
+        /// </summary>
+        /// <param name="itemRainPacket"></param>
+        public void ItemRain(GameObject.CommandPackets.ItemRainPacket itemRainPacket)
+        {
+            if (itemRainPacket != null)
+            {
+                short vnum = itemRainPacket.VNum;
+                byte amount = itemRainPacket.Amount;
+                int count = itemRainPacket.Count;
+                int time = itemRainPacket.Time;
+                MapInstance instance = Session.CurrentMapInstance;
+
+                Observable.Timer(TimeSpan.FromSeconds(0)).Subscribe(observer =>
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        MapCell cell = instance.Map.GetRandomPosition();
+                        MonsterMapItem droppedItem = new MonsterMapItem(cell.X, cell.Y, vnum, amount);
+                        instance.DroppedList[droppedItem.TransportId] = droppedItem;
+                        instance.Broadcast($"drop {droppedItem.ItemVNum} {droppedItem.TransportId} {droppedItem.PositionX} {droppedItem.PositionY} {(droppedItem.GoldAmount > 1 ? droppedItem.GoldAmount : droppedItem.Amount)} 0 0 -1");
+
+                        System.Threading.Thread.Sleep(time * 1000 / count);
+                    }
+                });
+            }
+        }
+
+        /// <summary>
         ///     $Bank
         /// </summary>
         /// <param name="packet"></param>
