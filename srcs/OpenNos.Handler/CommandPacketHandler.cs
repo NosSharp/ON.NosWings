@@ -434,6 +434,37 @@ namespace OpenNos.Handler
 
             Session.SendPacket(Session.Character.GenerateSay("This Quest doesn't exist", 10));
         }
+        /// <summary>
+        ///     $HelpMe
+        /// </summary>
+        /// <param name="HelpMePacket"></param>
+        public void HelpMe(GameObject.CommandPackets.HelpMePacket packet)
+        {
+            int count = 0;
+            foreach (ClientSession team in ServerManager.Instance.Sessions.Where(s => s.Account.Authority == AuthorityType.GameMaster || s.Account.Authority == AuthorityType.Moderator))
+            {
+                if (team.HasSelectedCharacter)
+                {
+                    count++;
+
+                    // TODO: move that to resx soo we follow i18n
+                    team.SendPacket(team.Character.GenerateSay($"User {Session.Character.Name} needs your help!", 12));
+                    team.SendPacket(team.Character.GenerateSay("Please inform the family chat when you take care of!", 12));
+                    team.SendPacket(Session.Character.GenerateSpk("Click this message to start chatting.", 5));
+                    team.SendPacket(Session.Character.GenerateSay($"User {Session.Character.Name} needs your help!", 0));
+                }
+            }
+            if (count != 0)
+            {
+                Session.SendPacket(Session.Character.GenerateSay($"{count} Team members were informed! You should get a message shortly.", 10));
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay("Sadly, there are no online team member right now. Please ask for help on our Discord Server at:", 10));
+                Session.SendPacket(Session.Character.GenerateSay("https://discord.gg/NSfm2uw", 10));
+            }
+        }
+
 
         /// <summary>
         ///     $StuffPack

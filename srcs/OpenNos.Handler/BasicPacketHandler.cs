@@ -1345,13 +1345,13 @@ namespace OpenNos.Handler
 
             if (ConfigurationManager.AppSettings["WorldInformation"].ToLower() == "true")
             {
-                Session.SendPacket(Session.Character.GenerateSay("--------------[NosWings : Reborn]--------------", 10));
+                Session.SendPacket(Session.Character.GenerateSay("--------------[NosCzech : Reborn]--------------", 10));
+                Session.SendPacket(Session.Character.GenerateSay("------------------Vítej/Welcome----------------", 11));
                 Session.SendPacket(Session.Character.GenerateSay($"Xp : {ServerManager.Instance.XpRate}", 11));
                 Session.SendPacket(Session.Character.GenerateSay($"Drop : {ServerManager.Instance.DropRate}", 11));
                 Session.SendPacket(Session.Character.GenerateSay($"Gold : {ServerManager.Instance.GoldRate}", 11));
                 Session.SendPacket(Session.Character.GenerateSay($"Fairy : {ServerManager.Instance.FairyXpRate}", 11));
-                Session.SendPacket(Session.Character.GenerateSay($"Website : https://noswings.io/", 11));
-                Session.SendPacket(Session.Character.GenerateSay($"Forum : https://forum.noswings.io/", 11));
+                Session.SendPacket(Session.Character.GenerateSay("[System] Hackshield activated!", 12));
                 Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 10));
             }
 
@@ -1377,9 +1377,57 @@ namespace OpenNos.Handler
                     ServerManager.Instance.ChangeMap(Session.Character.CharacterId);
                 }
             }
+            //Welcome message
+            if (Session.Character.Level == 1)
+            {
+                Session.SendPacket(Session.Character.GenerateSay("Welcome to NosHeat Adventurer! Join our Discord to get the lastest news and events! Enjoy ;)", 1));
+
+
+            }
+            //Message GM
+            if (Session.Character.Authority == AuthorityType.GameMaster)
+
+            {
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                {
+                    DestinationCharacterId = null,
+                    SourceCharacterId = Session.Character.CharacterId,
+                    SourceWorldId = ServerManager.Instance.WorldId,
+                    Message = $"Welcome Game Master {Session.Character.Name} A NosHeat !",
+                    Type = MessageType.Shout
+                });
+            }
+
+            if (Session.Character.Authority == AuthorityType.GameMaster)
+            {
+                Session.SendPacket(Session.Character.GenerateSay("------------------------", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Welcome " + Session.Character.Name, 12));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Help command to get help", 12));
+                Session.SendPacket(Session.Character.GenerateSay("------------------------", 10));
+                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 10000, 5, 5);
+            }
+            //Messaggio Bank
+            if (Session.Character.Authority == AuthorityType.User)
+
+            {
+
+                Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $HelpMe to contact a team member", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Warp to Move Map", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Buy to buy", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $GetExp to See % Exp", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $GetPrestige to See % ExpPrestige", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Prestige to get prestige", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $ReturnPoint to Returpoint", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Move to move", 10));
+                // ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
+
+
+            }
+
 
             Session.SendPacket(Session.Character.GenerateSki());
-            Session.SendPacket($"fd {Session.Character.Reput} 0 {(int)Session.Character.Dignity} {Math.Abs(Session.Character.GetDignityIco())}");
+            Session.SendPacket($"fd {Session.Character.Reput} 500 {(int)Session.Character.Dignity} {Math.Abs(Session.Character.GetDignityIco())}");
             Session.SendPacket(Session.Character.GenerateFd());
             Session.SendPacket("rage 0 250000");
             Session.SendPacket("rank_cool 0 0 18000");
