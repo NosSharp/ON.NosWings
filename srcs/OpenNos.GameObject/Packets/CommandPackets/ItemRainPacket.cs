@@ -22,11 +22,8 @@ namespace OpenNos.GameObject.CommandPackets
         [PacketIndex(3)]
         public int Time { get; set; }
 
-        public static string ReturnHelp()
-        {
-            return "$ItemRain ITEMVNUM AMOUNT COUNT TIME";
-        }
-
+        public static string ReturnHelp() => "$ItemRain ITEMVNUM AMOUNT COUNT TIME";
+        
         #endregion
 
     }
